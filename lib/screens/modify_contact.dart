@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sample_project/blocs/data_bloc.dart';
+import 'package:sample_project/models/contact.dart';
 import 'package:sample_project/widgets/contact_form.dart';
 
-class AddContactScreen extends StatelessWidget {
-  const AddContactScreen({super.key});
+class ModifyContactScreen extends StatelessWidget {
+  final Contact contact;
+  const ModifyContactScreen({super.key, required this.contact});
 
   @override
   Widget build(BuildContext context) {
@@ -14,14 +16,16 @@ class AddContactScreen extends StatelessWidget {
         children: [
           AppBar(
             title: const Text(
-              'Add New Contact',
+              'Modify Contact',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             backgroundColor: Colors.white,
             elevation: 0,
             centerTitle: false,
           ),
-          const Expanded(child: Center(child: ContactForm())),
+          Expanded(
+            child: Center(child: ContactForm(contact: contact)),
+          ),
         ],
       ),
     );

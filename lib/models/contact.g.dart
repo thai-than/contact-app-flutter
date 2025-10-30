@@ -26,13 +26,14 @@ class ContactAdapter extends TypeAdapter<Contact> {
       company: fields[6] as String?,
       facebook: fields[7] as String?,
       linkedIn: fields[8] as String?,
+      key: fields[9] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Contact obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.firstName)
       ..writeByte(1)
@@ -50,7 +51,9 @@ class ContactAdapter extends TypeAdapter<Contact> {
       ..writeByte(7)
       ..write(obj.facebook)
       ..writeByte(8)
-      ..write(obj.linkedIn);
+      ..write(obj.linkedIn)
+      ..writeByte(9)
+      ..write(obj.key);
   }
 
   @override

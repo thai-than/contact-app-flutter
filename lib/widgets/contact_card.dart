@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sample_project/models/contact.dart';
-import 'package:sample_project/screens/detail.dart';
 import 'package:sample_project/utils/image_utils.dart';
 
 class ContactCard extends StatelessWidget {
@@ -8,17 +8,14 @@ class ContactCard extends StatelessWidget {
 
   const ContactCard({super.key, required this.contact});
 
+  void onCardTap(BuildContext context) {
+    context.go('/contact/${contact.key}', extra: contact);
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailScreen(contact: contact),
-          ),
-        );
-      },
+      onTap: () => onCardTap(context),
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(

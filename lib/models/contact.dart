@@ -1,10 +1,9 @@
-
 import 'package:hive/hive.dart';
 
 part 'contact.g.dart';
 
 @HiveType(typeId: 0)
-class Contact {
+class Contact extends HiveObject {
   // Need to be update after create contact exeption email
   @HiveField(0)
   String firstName;
@@ -24,6 +23,8 @@ class Contact {
   String? facebook;
   @HiveField(8)
   String? linkedIn;
+  @HiveField(9)
+  int? key;
 
   Contact({
     required this.firstName,
@@ -35,9 +36,10 @@ class Contact {
     this.company,
     this.facebook,
     this.linkedIn,
+    this.key,
   });
 
-  String get fullName => '$firstName $lastName';
+  String get fullName => '$firstName $lastName $key';
 
   void updateContact({
     String? firstName,

@@ -32,4 +32,31 @@ class ContactService {
       facebook: 'https://www.facebook.com/johndoe',
     );
   }
+
+  static Future<int> addContact(Contact contact) async {
+    final box = Hive.box<Contact>('contacts');
+    final key = await box.add(contact);
+    contact.key = key;
+    return key;
+  }
+
+  static Future<void> deleteContact(Contact contact) async {
+    await contact.delete();
+  }
+
+  static Future<void> updateContact(Contact contact) async {
+    final box = Hive.box<Contact>('contacts');
+    await box.put(contact.key, contact);
+  }
+
+  // search
+  static List<Contact> searchContacts(String query) {
+    final contacts = getContacts();
+    return contacts
+        .where(
+          (contact) =>
+              contact.fullName.toLowerCase().contains(query.toLowerCase()),
+        )
+        .toList();
+  }
 }
