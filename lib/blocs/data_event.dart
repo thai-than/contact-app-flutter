@@ -12,13 +12,14 @@ class AddContact extends DataEvent {
 }
 
 class DeleteContact extends DataEvent {
-  final Contact contact;
-  DeleteContact(this.contact);
+  final int index;
+  DeleteContact(this.index);
 }
 
 class UpdateContact extends DataEvent {
   final Contact contact;
-  UpdateContact(this.contact);
+  final int index;
+  UpdateContact(this.contact, this.index);
 }
 
 class SearchContact extends DataEvent {

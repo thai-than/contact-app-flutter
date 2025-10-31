@@ -56,7 +56,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
   ) async {
     emit(DataLoading());
     try {
-      await ContactService.deleteContact(event.contact);
+      await ContactService.deleteContact(event.index);
       emit(DataLoaded(ContactService.getContacts()));
     } catch (e) {
       emit(DataError(e.toString()));
@@ -69,7 +69,10 @@ class DataBloc extends Bloc<DataEvent, DataState> {
   ) async {
     emit(DataLoading());
     try {
-      await ContactService.updateContact(event.contact);
+      await ContactService.updateContact(
+        contact: event.contact,
+        index: event.index,
+      );
       emit(DataLoaded(ContactService.getContacts()));
     } catch (e) {
       emit(DataError(e.toString()));

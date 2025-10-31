@@ -50,14 +50,19 @@ class _HomeScreenState extends State<HomeScreen> {
           child: BlocBuilder<DataBloc, DataState>(
             builder: (context, state) {
               if (state is DataInitial) {
-                return const Center(child: Text('Press load to fetch contacts'));
+                return const Center(
+                  child: Text('Press load to fetch contacts'),
+                );
               } else if (state is DataLoading) {
                 return const Center(child: CircularProgressIndicator());
               } else if (state is DataLoaded) {
                 return ListView.builder(
                   itemCount: state.data.length,
                   itemBuilder: (context, index) {
-                    return ContactCard(contact: state.data[index]);
+                    return ContactCard(
+                      contact: state.data[index],
+                      index: index,
+                    );
                   },
                 );
               } else if (state is DataError) {

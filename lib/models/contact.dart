@@ -39,7 +39,7 @@ class Contact extends HiveObject {
     this.key,
   });
 
-  String get fullName => '$firstName $lastName $key';
+  String get fullName => '$firstName $lastName';
 
   void updateContact({
     String? firstName,

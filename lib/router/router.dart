@@ -25,14 +25,18 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const ProfileScreen(),
         ),
         GoRoute(
-          path: '/contact/:id',
-          builder: (context, state) =>
-              DetailScreen(contact: state.extra as Contact),
+        path: '/contact/:id',
+        builder: (context, state) => DetailScreen(
+        contact: state.extra as Contact,
+        index: int.parse(state.pathParameters['id']!),
+        ),
         ),
         GoRoute(
-          path: '/modify/:id',
-          builder: (context, state) =>
-              ModifyContactScreen(contact: state.extra as Contact),
+        path: '/modify/:id',
+        builder: (context, state) => ModifyContactScreen(
+        contact: state.extra as Contact,
+        index: int.parse(state.pathParameters['id']!),
+        ),
         ),
       ],
     ),

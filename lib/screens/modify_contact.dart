@@ -6,7 +6,12 @@ import 'package:sample_project/widgets/contact_form.dart';
 
 class ModifyContactScreen extends StatelessWidget {
   final Contact contact;
-  const ModifyContactScreen({super.key, required this.contact});
+  final int index;
+  const ModifyContactScreen({
+    super.key,
+    required this.contact,
+    required this.index,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,9 @@ class ModifyContactScreen extends StatelessWidget {
             centerTitle: false,
           ),
           Expanded(
-            child: Center(child: ContactForm(contact: contact)),
+            child: Center(
+              child: ContactForm(contact: contact, index: index),
+            ),
           ),
         ],
       ),

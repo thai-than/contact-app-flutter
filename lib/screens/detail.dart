@@ -9,8 +9,9 @@ import 'package:sample_project/widgets/contact_detail.dart';
 
 class DetailScreen extends StatelessWidget {
   final Contact contact;
+  final int index;
 
-  const DetailScreen({super.key, required this.contact});
+  const DetailScreen({super.key, required this.contact, required this.index});
 
   Future<void> _confirmDelete(BuildContext context) async {
     final shouldDelete = await showDialog<bool>(
@@ -27,16 +28,14 @@ class DetailScreen extends StatelessWidget {
             onPressed: () => Navigator.pop(context, true),
             icon: const Icon(Icons.delete_outline),
             label: const Text('Delete'),
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.red.shade600,
-            ),
+            style: FilledButton.styleFrom(backgroundColor: Colors.red.shade600),
           ),
         ],
       ),
     );
 
     if (shouldDelete == true) {
-      context.read<DataBloc>().add(DeleteContact(contact));
+      context.read<DataBloc>().add(DeleteContact(index));
     }
   }
 
@@ -64,10 +63,7 @@ class DetailScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             contact.fullName,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
           ),
           backgroundColor: Colors.white,
           elevation: 0,
@@ -76,7 +72,10 @@ class DetailScreen extends StatelessWidget {
             IconButton(
               tooltip: 'Edit contact',
               icon: const Icon(Icons.edit, color: Colors.black87),
-              onPressed: () => context.go('/modify/${contact.key}', extra: contact),
+              onPressed: () => context.go(
+                '/modify/$index',
+                extra: contact,
+              ),
             ),
             IconButton(
               tooltip: 'Delete contact',
@@ -85,9 +84,7 @@ class DetailScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: SafeArea(
-          child: ContactDetailScreen(contact: contact),
-        ),
+        body: SafeArea(child: ContactDetailScreen(contact: contact)),
       ),
     );
   }

@@ -20,7 +20,7 @@ class ContactDetailScreen extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF24E2A5),
+                  color: const Color.fromARGB(255, 46, 199, 150),
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
@@ -58,11 +58,13 @@ class ContactDetailScreen extends StatelessWidget {
                                 color: Colors.black87,
                               ),
                               const SizedBox(width: 6),
-                              Text(
-                                contact.company ?? '',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
+                              Expanded(
+                                child: Text(
+                                  contact.company ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ],
@@ -76,11 +78,13 @@ class ContactDetailScreen extends StatelessWidget {
                                 color: Colors.black87,
                               ),
                               const SizedBox(width: 6),
-                              Text(
-                                contact.address ?? '',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
+                              Expanded(
+                                child: Text(
+                                  contact.address ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ],

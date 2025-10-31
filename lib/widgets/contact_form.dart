@@ -11,7 +11,8 @@ import 'package:sample_project/widgets/input.dart';
 
 class ContactForm extends StatefulWidget {
   final Contact? contact;
-  const ContactForm({super.key, this.contact});
+  final int? index;
+  const ContactForm({super.key, this.contact, this.index});
 
   @override
   State<ContactForm> createState() => _ContactFormState();
@@ -90,10 +91,14 @@ class _ContactFormState extends State<ContactForm> {
     if (!_formKey.currentState!.validate()) return;
 
     final newContact = _buildContact();
-    final isUpdating = widget.contact != null;
+    final isUpdating = widget.contact != null && widget.index != null;
 
     final bloc = context.read<DataBloc>();
-    bloc.add(isUpdating ? UpdateContact(newContact) : AddContact(newContact));
+    bloc.add(
+      isUpdating
+          ? UpdateContact(newContact, widget.index!)
+          : AddContact(newContact),
+    );
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

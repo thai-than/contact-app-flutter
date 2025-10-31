@@ -5,11 +5,12 @@ import 'package:sample_project/utils/image_utils.dart';
 
 class ContactCard extends StatelessWidget {
   final Contact contact;
+  final int index;
 
-  const ContactCard({super.key, required this.contact});
+  const ContactCard({super.key, required this.contact, required this.index});
 
   void onCardTap(BuildContext context) {
-    context.go('/contact/${contact.key}', extra: contact);
+    context.go('/contact/$index', extra: contact);
   }
 
   @override

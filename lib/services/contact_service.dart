@@ -14,7 +14,7 @@ class ContactService {
       final contacts = getContacts();
       return contacts.firstWhere((contact) => contact.email == email);
     } catch (e) {
-      return null; // No match found
+      return null;
     }
   }
 
@@ -40,13 +40,14 @@ class ContactService {
     return key;
   }
 
-  static Future<void> deleteContact(Contact contact) async {
-    await contact.delete();
+  static Future<void> deleteContact(int index) async {
+    final box = Hive.box<Contact>('contacts');
+    await box.deleteAt(index);
   }
 
-  static Future<void> updateContact(Contact contact) async {
+  static Future<void> updateContact({required Contact contact, required int index}) async {
     final box = Hive.box<Contact>('contacts');
-    await box.put(contact.key, contact);
+    await box.putAt(index, contact);
   }
 
   // search
