@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sample_project/blocs/data_bloc.dart';
 import 'package:sample_project/blocs/data_event.dart';
 import 'package:sample_project/models/contact.dart';
+import 'package:sample_project/router/router.dart';
 import 'package:sample_project/widgets/button.dart';
 import 'package:sample_project/widgets/input.dart';
 
@@ -112,7 +113,7 @@ class _ContactFormState extends State<ContactForm> {
       ),
     );
 
-    context.go('/');
+    context.goNamed(RouteNames.home);
 
     _formKey.currentState!.reset();
     setState(() => _imageFile = null);

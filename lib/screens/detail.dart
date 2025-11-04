@@ -5,6 +5,7 @@ import 'package:sample_project/blocs/data_bloc.dart';
 import 'package:sample_project/blocs/data_event.dart';
 import 'package:sample_project/blocs/data_state.dart';
 import 'package:sample_project/models/contact.dart';
+import 'package:sample_project/router/router.dart';
 import 'package:sample_project/widgets/contact_detail.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -56,7 +57,7 @@ class DetailScreen extends StatelessWidget {
               duration: const Duration(seconds: 2),
             ),
           );
-          context.go('/');
+          context.goNamed(RouteNames.home);
         }
       },
       child: Scaffold(
@@ -72,8 +73,9 @@ class DetailScreen extends StatelessWidget {
             IconButton(
               tooltip: 'Edit contact',
               icon: const Icon(Icons.edit, color: Colors.black87),
-              onPressed: () => context.go(
-                '/modify/$index',
+              onPressed: () => context.goNamed(
+                RouteNames.modify,
+                pathParameters: {'index': index.toString()},
                 extra: contact,
               ),
             ),

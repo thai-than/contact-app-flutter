@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sample_project/blocs/data_bloc.dart';
+import 'package:sample_project/blocs/data_state.dart';
 import 'package:sample_project/widgets/contact_detail.dart';
-import 'package:sample_project/services/contact_service.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String? email;
@@ -22,7 +24,14 @@ class ProfileScreen extends StatelessWidget {
           actions: [IconButton(icon: const Icon(Icons.edit), onPressed: () {})],
         ),
         Expanded(
-          child: ContactDetailScreen(contact: ContactService.getMyContact()),
+          child: BlocBuilder<DataBloc, DataState>(
+            builder: (context, state) {
+              if (state is DataLoaded) {
+                return ContactDetailScreen(contact: state.myContact!);
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
         ),
       ],
     );

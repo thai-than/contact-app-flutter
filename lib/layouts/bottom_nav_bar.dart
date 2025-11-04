@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sample_project/router/router.dart';
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({super.key});
@@ -25,13 +26,13 @@ class BottomNavBar extends StatelessWidget {
     void onTabTapped(int index) {
       switch (index) {
         case 0:
-          context.go('/add');
+          context.goNamed(RouteNames.add);
           break;
         case 1:
-          context.go('/');
+          context.goNamed(RouteNames.home);
           break;
         case 2:
-          context.go('/profile');
+          context.goNamed(RouteNames.profile);
           break;
       }
     }
@@ -45,14 +46,8 @@ class BottomNavBar extends StatelessWidget {
           icon: Icon(Icons.person_add_alt_1),
           label: 'Add',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.list_alt),
-          label: 'Contacts',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'Contacts'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
       ],
     );
   }

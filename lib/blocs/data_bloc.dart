@@ -4,24 +4,31 @@ import 'data_event.dart';
 import 'data_state.dart';
 
 class DataBloc extends Bloc<DataEvent, DataState> {
-  DataBloc() : super(DataInitial()) {
+  final ContactService _contactService;
+
+  DataBloc({ContactService? contactService})
+    : _contactService = contactService ?? ContactService(),
+      super(DataInitial()) {
     on<LoadData>(_onLoadData);
     on<RefreshData>(_onRefreshData);
     on<AddContact>(_onAddContact);
     on<DeleteContact>(_onDeleteContact);
     on<UpdateContact>(_onUpdateContact);
     on<SearchContact>(_onSearchContact);
+    on<GetContactByEmail>(_onGetContactByEmail);
   }
 
   Future<void> _onLoadData(LoadData event, Emitter<DataState> emit) async {
     emit(DataLoading());
     try {
-      // Simulate data fetching
-      await Future.delayed(const Duration(seconds: 1));
-      final data = ContactService.getContacts();
-      emit(DataLoaded(data));
+      await Future.delayed(
+        const Duration(milliseconds: 300),
+      ); // optional UX delay
+      final data = _contactService.getContacts();
+      final myContact = _contactService.getMyContact();
+      emit(DataLoaded(data, myContact: myContact));
     } catch (e) {
-      emit(DataError(e.toString()));
+      emit(DataError('Failed to load contacts: $e'));
     }
   }
 
@@ -31,22 +38,22 @@ class DataBloc extends Bloc<DataEvent, DataState> {
   ) async {
     emit(DataLoading());
     try {
-      // Simulate refresh
-      await Future.delayed(const Duration(seconds: 1));
-      final data = ContactService.getContacts();
+      await Future.delayed(const Duration(milliseconds: 300));
+      final data = _contactService.getContacts();
       emit(DataLoaded(data));
     } catch (e) {
-      emit(DataError(e.toString()));
+      emit(DataError('Failed to refresh contacts: $e'));
     }
   }
 
   Future<void> _onAddContact(AddContact event, Emitter<DataState> emit) async {
     emit(DataLoading());
     try {
-      await ContactService.addContact(event.contact);
-      emit(DataLoaded(ContactService.getContacts()));
+      await _contactService.addContact(event.contact);
+      final updatedContacts = _contactService.getContacts();
+      emit(DataLoaded(updatedContacts));
     } catch (e) {
-      emit(DataError(e.toString()));
+      emit(DataError('Failed to add contact: $e'));
     }
   }
 
@@ -56,10 +63,11 @@ class DataBloc extends Bloc<DataEvent, DataState> {
   ) async {
     emit(DataLoading());
     try {
-      await ContactService.deleteContact(event.index);
-      emit(DataLoaded(ContactService.getContacts()));
+      await _contactService.deleteContact(event.index);
+      final updatedContacts = _contactService.getContacts();
+      emit(DataLoaded(updatedContacts));
     } catch (e) {
-      emit(DataError(e.toString()));
+      emit(DataError('Failed to delete contact: $e'));
     }
   }
 
@@ -69,13 +77,14 @@ class DataBloc extends Bloc<DataEvent, DataState> {
   ) async {
     emit(DataLoading());
     try {
-      await ContactService.updateContact(
-        contact: event.contact,
+      await _contactService.updateContact(
         index: event.index,
+        contact: event.contact,
       );
-      emit(DataLoaded(ContactService.getContacts()));
+      final updatedContacts = _contactService.getContacts();
+      emit(DataLoaded(updatedContacts));
     } catch (e) {
-      emit(DataError(e.toString()));
+      emit(DataError('Failed to update contact: $e'));
     }
   }
 
@@ -85,10 +94,23 @@ class DataBloc extends Bloc<DataEvent, DataState> {
   ) async {
     emit(DataLoading());
     try {
-      final data = ContactService.searchContacts(event.query);
-      emit(DataLoaded(data));
+      final results = _contactService.searchContacts(event.query);
+      emit(DataLoaded(results));
     } catch (e) {
-      emit(DataError(e.toString()));
+      emit(DataError('Failed to search contacts: $e'));
+    }
+  }
+
+  Future<void> _onGetContactByEmail(
+    GetContactByEmail event,
+    Emitter<DataState> emit,
+  ) async {
+    emit(DataLoading());
+    try {
+      final contact = _contactService.getContactByEmail(event.email);
+      emit(DataLoaded([contact!]));
+    } catch (e) {
+      emit(DataError('Failed to get contact by email: $e'));
     }
   }
 }

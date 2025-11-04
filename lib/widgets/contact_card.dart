@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sample_project/models/contact.dart';
+import 'package:sample_project/router/router.dart';
 import 'package:sample_project/utils/image_utils.dart';
 
 class ContactCard extends StatelessWidget {
@@ -10,7 +11,11 @@ class ContactCard extends StatelessWidget {
   const ContactCard({super.key, required this.contact, required this.index});
 
   void onCardTap(BuildContext context) {
-    context.go('/contact/$index', extra: contact);
+    context.goNamed(
+      RouteNames.contact,
+      pathParameters: {'index': index.toString()},
+      extra: contact,
+    );
   }
 
   @override

@@ -26,3 +26,15 @@ class SearchContact extends DataEvent {
   final String query;
   SearchContact(this.query);
 }
+
+class GetMyContact extends DataEvent {}
+
+class GetContactById extends DataEvent {
+  final int id;
+  GetContactById(this.id);
+}
+
+class GetContactByEmail extends DataEvent {
+  final String email;
+  GetContactByEmail(this.email);
+}
