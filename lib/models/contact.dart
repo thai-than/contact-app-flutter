@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'contact.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: 2)
 class Contact extends HiveObject {
   // Need to be update after create contact exeption email
   @HiveField(0)
@@ -10,70 +10,47 @@ class Contact extends HiveObject {
   @HiveField(1)
   String lastName;
   @HiveField(2)
-  final String email;
+  String phoneNumber;
   @HiveField(3)
-  String imageUrl;
+  String? email;
   @HiveField(4)
-  String? phoneNumber;
+  String? imageUrl;
   @HiveField(5)
   String? address;
   @HiveField(6)
   String? company;
   @HiveField(7)
-  String? facebook;
-  @HiveField(8)
-  String? linkedIn;
-  @HiveField(9)
-  int? key;
+  String? website;
 
   Contact({
     required this.firstName,
     required this.lastName,
-    required this.email,
-    required this.imageUrl,
-    this.phoneNumber,
+    required this.phoneNumber,
+    this.email,
+    this.imageUrl,
     this.address,
     this.company,
-    this.facebook,
-    this.linkedIn,
-    this.key,
+    this.website,
   });
 
   String get fullName => '$firstName $lastName';
 
-  void updateContact({
-    String? firstName,
-    String? lastName,
-    String? imageUrl,
-    String? phoneNumber,
-    String? address,
-    String? company,
-    String? facebook,
-    String? linkedIn,
-  }) {
-    if (firstName != null) {
-      this.firstName = firstName;
-    }
-    if (lastName != null) {
-      this.lastName = lastName;
-    }
-    if (imageUrl != null) {
-      this.imageUrl = imageUrl;
-    }
-    if (phoneNumber != null) {
-      this.phoneNumber = phoneNumber;
-    }
-    if (address != null) {
-      this.address = address;
-    }
-    if (company != null) {
-      this.company = company;
-    }
-    if (facebook != null) {
-      this.facebook = facebook;
-    }
-    if (linkedIn != null) {
-      this.linkedIn = linkedIn;
-    }
+  @override
+  String toString() {
+    return 'Contact{firstName: $firstName, lastName: $lastName, email: $email, imageUrl: $imageUrl, phoneNumber: $phoneNumber, address: $address, company: $company, website: $website}';
+  }
+
+  // toStringJSON
+  String toStringJSON() {
+    return {
+      'firstName': firstName,
+      'lastName': lastName,
+      'phoneNumber': phoneNumber,
+      'email': email,
+      'imageUrl': imageUrl,
+      'address': address,
+      'company': company,
+      'website': website,
+    }.toString();
   }
 }

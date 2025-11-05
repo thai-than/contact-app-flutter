@@ -1,0 +1,87 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sample_project/blocs/user/user_state.dart';
+import 'package:sample_project/models/user.dart';
+import 'package:sample_project/router/router.dart';
+import 'package:sample_project/services/user_service.dart';
+
+class UserCubit extends Cubit<UserState> {
+  final UserService _userService;
+  final GoRouter _router;
+
+  UserCubit()
+    : _userService = UserService(),
+      _router = router,
+      super(UserInitial());
+
+  Future<void> loadUser() async {
+    try {
+      final user = _userService.getUser();
+      if (user == null) {
+        _router.goNamed(RouteNames.register);
+        emit(UserLoadedEmpty());
+      } else {
+        emit(UserLoaded(user));
+        _router.goNamed(RouteNames.login);
+      }
+    } catch (e) {
+      emit(UserError(e.toString()));
+    }
+  }
+
+  Future<void> createUser(User user) async {
+    try {
+      await _userService.createUser(user);
+      emit(UserLoaded(user));
+      _router.goNamed(RouteNames.home);
+    } catch (e) {
+      emit(UserError(e.toString()));
+    }
+  }
+
+  Future<void> updateUser(User user) async {
+    try {
+      await _userService.updateUser(user);
+      emit(UserLoaded(user));
+      _router.goNamed(RouteNames.profile);
+    } catch (e) {
+      emit(UserError(e.toString()));
+    }
+  }
+
+  Future<void> deleteUser() async {
+    try {
+      await _userService.deleteUser();
+      emit(UserLoadedEmpty());
+      _router.goNamed(RouteNames.register);
+    } catch (e) {
+      emit(UserError(e.toString()));
+    }
+  }
+
+  Future<void> login(String passcode) async {
+    try {
+      final user = _userService.getUser();
+      if (user != null && user.passcode == passcode) {
+        emit(UserLoaded(user));
+        _router.go(RoutePaths.home);
+      } else {
+        emit(UserError('Invalid passcode'));
+      }
+    } catch (e) {
+      emit(UserError(e.toString()));
+    }
+  }
+
+  Future<void> goToEditProfile() async {
+    try {
+      final user = _userService.getUser();
+      if (user != null) {
+        emit(UserLoaded(user));
+        _router.goNamed(RouteNames.editProfile);
+      }
+    } catch (e) {
+      emit(UserError(e.toString()));
+    }
+  }
+}

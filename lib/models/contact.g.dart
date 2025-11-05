@@ -8,7 +8,7 @@ part of 'contact.dart';
 
 class ContactAdapter extends TypeAdapter<Contact> {
   @override
-  final int typeId = 0;
+  final int typeId = 2;
 
   @override
   Contact read(BinaryReader reader) {
@@ -19,41 +19,35 @@ class ContactAdapter extends TypeAdapter<Contact> {
     return Contact(
       firstName: fields[0] as String,
       lastName: fields[1] as String,
-      email: fields[2] as String,
-      imageUrl: fields[3] as String,
-      phoneNumber: fields[4] as String?,
+      phoneNumber: fields[2] as String,
+      email: fields[3] as String?,
+      imageUrl: fields[4] as String?,
       address: fields[5] as String?,
       company: fields[6] as String?,
-      facebook: fields[7] as String?,
-      linkedIn: fields[8] as String?,
-      key: fields[9] as int?,
+      website: fields[7] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Contact obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.firstName)
       ..writeByte(1)
       ..write(obj.lastName)
       ..writeByte(2)
-      ..write(obj.email)
-      ..writeByte(3)
-      ..write(obj.imageUrl)
-      ..writeByte(4)
       ..write(obj.phoneNumber)
+      ..writeByte(3)
+      ..write(obj.email)
+      ..writeByte(4)
+      ..write(obj.imageUrl)
       ..writeByte(5)
       ..write(obj.address)
       ..writeByte(6)
       ..write(obj.company)
       ..writeByte(7)
-      ..write(obj.facebook)
-      ..writeByte(8)
-      ..write(obj.linkedIn)
-      ..writeByte(9)
-      ..write(obj.key);
+      ..write(obj.website);
   }
 
   @override

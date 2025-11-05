@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sample_project/utils/constant.dart';
 
 class CustomButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -15,32 +16,36 @@ class CustomButton extends StatelessWidget {
   Color _getBackgroundColor() {
     switch (variant) {
       case 'success':
-        return Colors.green.shade300;
+        return kSuccessColor;
       case 'danger':
-        return Colors.red.shade300;
+        return kDangerColor;
       case 'info':
       default:
-        return const Color(0xFF67B6C4);
+        return kPrimaryColor;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        backgroundColor: _getBackgroundColor(),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+    return SizedBox(
+      height: 48,
+      width: double.infinity,
+      child: TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+          backgroundColor: _getBackgroundColor(),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.w700,
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
     );

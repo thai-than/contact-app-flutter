@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sample_project/utils/constant.dart';
 import 'package:sample_project/widgets/contact_card.dart';
-import 'package:sample_project/blocs/data_bloc.dart';
-import 'package:sample_project/blocs/data_event.dart';
-import 'package:sample_project/blocs/data_state.dart';
+import 'package:sample_project/blocs/contact_list/contact_list_cubit.dart';
+import 'package:sample_project/blocs/contact_list/contact_list_event.dart';
+import 'package:sample_project/blocs/contact_list/contact_list_state.dart';
 import 'package:sample_project/widgets/search_input.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<DataBloc>().add(LoadData());
+    context.read<ContactListCubit>().add(LoadContacts());
   }
 
   @override
@@ -37,25 +38,26 @@ class _HomeScreenState extends State<HomeScreen> {
             SearchInput(
               controller: TextEditingController(),
               onChanged: (value) {
-                context.read<DataBloc>().add(SearchContact(value));
+                context.read<ContactListCubit>().add(SearchContact(value));
               },
             ),
             IconButton(
               icon: const Icon(Icons.refresh),
-              onPressed: () => context.read<DataBloc>().add(RefreshData()),
+              onPressed: () =>
+                  context.read<ContactListCubit>().add(RefreshContacts()),
             ),
           ],
         ),
         Expanded(
-          child: BlocBuilder<DataBloc, DataState>(
+          child: BlocBuilder<ContactListCubit, ContactListState>(
             builder: (context, state) {
-              if (state is DataInitial) {
+              if (state is ContactListInitial) {
                 return const Center(
                   child: Text('Press load to fetch contacts'),
                 );
-              } else if (state is DataLoading) {
+              } else if (state is ContactListLoading) {
                 return const Center(child: CircularProgressIndicator());
-              } else if (state is DataLoaded) {
+              } else if (state is ContactListLoaded && state.data.isNotEmpty) {
                 return ListView.builder(
                   itemCount: state.data.length,
                   itemBuilder: (context, index) {
@@ -65,11 +67,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                 );
-              } else if (state is DataError) {
+              } else if (state is ContactListLoaded && state.data.isEmpty) {
+                return const Center(child: Text('No contacts found!'));
+              } else if (state is ContactListError) {
                 return Center(child: Text('Error: ${state.message}'));
               }
               return const SizedBox.shrink();
             },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FloatingActionButton(
+            onPressed: () =>
+                context.read<ContactListCubit>().onAddContactButtonTapped(),
+            tooltip: 'Add contact',
+            backgroundColor: kPrimaryColor,
+            elevation: 2,
+            shape: const CircleBorder(),
+            child: const Icon(Icons.add, color: kBgColor),
           ),
         ),
       ],

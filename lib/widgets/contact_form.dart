@@ -1,19 +1,22 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sample_project/blocs/data_bloc.dart';
-import 'package:sample_project/blocs/data_event.dart';
 import 'package:sample_project/models/contact.dart';
-import 'package:sample_project/router/router.dart';
 import 'package:sample_project/widgets/button.dart';
 import 'package:sample_project/widgets/input.dart';
 
 class ContactForm extends StatefulWidget {
   final Contact? contact;
-  final int? index;
-  const ContactForm({super.key, this.contact, this.index});
+  final Future<void> Function(Contact newContact) onSubmit;
+  final String? alertMessage;
+  final bool? isEditing;
+  const ContactForm({
+    super.key,
+    this.contact,
+    required this.onSubmit,
+    this.alertMessage,
+    this.isEditing,
+  });
 
   @override
   State<ContactForm> createState() => _ContactFormState();
@@ -28,7 +31,7 @@ class _ContactFormState extends State<ContactForm> {
   late final TextEditingController _phoneController;
   late final TextEditingController _addressController;
   late final TextEditingController _companyController;
-  late final TextEditingController _linkedinController;
+  late final TextEditingController _websiteController;
 
   File? _imageFile;
 
@@ -44,8 +47,8 @@ class _ContactFormState extends State<ContactForm> {
     _phoneController = TextEditingController(text: c?.phoneNumber ?? '');
     _addressController = TextEditingController(text: c?.address ?? '');
     _companyController = TextEditingController(text: c?.company ?? '');
-    _linkedinController = TextEditingController(text: c?.linkedIn ?? '');
-    _imageFile = c?.imageUrl != null ? File(c!.imageUrl) : null;
+    _websiteController = TextEditingController(text: c?.website ?? '');
+    _imageFile = c?.imageUrl != null ? File(c!.imageUrl!) : null;
   }
 
   @override
@@ -57,7 +60,7 @@ class _ContactFormState extends State<ContactForm> {
       _phoneController,
       _addressController,
       _companyController,
-      _linkedinController,
+      _websiteController,
     ]) {
       controller.dispose();
     }
@@ -79,33 +82,25 @@ class _ContactFormState extends State<ContactForm> {
       phoneNumber: _phoneController.text.trim(),
       address: _addressController.text.trim(),
       company: _companyController.text.trim(),
-      linkedIn: _linkedinController.text.trim(),
+      website: _websiteController.text.trim(),
       imageUrl:
           _imageFile?.path ??
           widget.contact?.imageUrl ??
           'assets/images/avatar.png',
-      key: widget.contact?.key,
     );
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
 
     final newContact = _buildContact();
-    final isUpdating = widget.contact != null && widget.index != null;
-
-    final bloc = context.read<DataBloc>();
-    bloc.add(
-      isUpdating
-          ? UpdateContact(newContact, widget.index!)
-          : AddContact(newContact),
-    );
+    await widget.onSubmit(newContact);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Contact ${isUpdating ? 'updated' : 'added'}: '
-          '${newContact.firstName} ${newContact.lastName}',
+          widget.alertMessage ??
+              "Successfully ${widget.isEditing == true ? 'updated' : 'added'}",
           textAlign: TextAlign.center,
         ),
         backgroundColor: Colors.lightGreen.shade500,
@@ -113,16 +108,12 @@ class _ContactFormState extends State<ContactForm> {
       ),
     );
 
-    context.goNamed(RouteNames.home);
-
     _formKey.currentState!.reset();
     setState(() => _imageFile = null);
   }
 
   @override
   Widget build(BuildContext context) {
-    final isEditing = widget.contact != null;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Card(
@@ -145,7 +136,9 @@ class _ContactFormState extends State<ContactForm> {
                   const SizedBox(height: 16),
                   CustomButton(
                     onPressed: _submitForm,
-                    text: isEditing ? 'Update Contact' : 'Add New Contact',
+                    text: widget.isEditing == true
+                        ? 'Update Contact'
+                        : 'Add New Contact',
                   ),
                 ],
               ),
@@ -219,7 +212,7 @@ class _ContactFormState extends State<ContactForm> {
         CustomInput(controller: _phoneController, labelText: 'Phone'),
         CustomInput(controller: _addressController, labelText: 'Address'),
         CustomInput(controller: _companyController, labelText: 'Company'),
-        CustomInput(controller: _linkedinController, labelText: 'LinkedIn'),
+        CustomInput(controller: _websiteController, labelText: 'Website'),
       ],
     );
   }

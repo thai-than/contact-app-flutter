@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomInput extends StatelessWidget {
   final TextEditingController? controller;
@@ -11,6 +12,7 @@ class CustomInput extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final EdgeInsetsGeometry? contentPadding;
+  final List<TextInputFormatter>? inputFormatters;
 
   const CustomInput({
     super.key,
@@ -24,6 +26,7 @@ class CustomInput extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.contentPadding,
+    this.inputFormatters,
   });
 
   @override
@@ -59,6 +62,7 @@ class CustomInput extends StatelessWidget {
         obscureText: obscureText,
         keyboardType: keyboardType,
         maxLines: maxLines,
+        inputFormatters: inputFormatters,
         style: const TextStyle(
           color: textColor,
           fontSize: 16,

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sample_project/blocs/contact_list/contact_list_cubit.dart';
+import 'package:sample_project/blocs/contact_list/contact_list_event.dart';
 import 'package:sample_project/models/contact.dart';
-import 'package:sample_project/router/router.dart';
 import 'package:sample_project/utils/image_utils.dart';
 
 class ContactCard extends StatelessWidget {
@@ -11,11 +12,7 @@ class ContactCard extends StatelessWidget {
   const ContactCard({super.key, required this.contact, required this.index});
 
   void onCardTap(BuildContext context) {
-    context.goNamed(
-      RouteNames.contact,
-      pathParameters: {'index': index.toString()},
-      extra: contact,
-    );
+    context.read<ContactListCubit>().add(GoToContactDetails(contact, index));
   }
 
   @override
@@ -23,7 +20,7 @@ class ContactCard extends StatelessWidget {
     return InkWell(
       onTap: () => onCardTap(context),
       child: Card(
-        elevation: 4,
+        elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: const BorderSide(color: Color(0xFFE0E0E0), width: 1),
@@ -61,7 +58,7 @@ class ContactCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      contact.email,
+                      contact.email ?? '',
                       style: const TextStyle(
                         color: Color(0xFF7A7A7A),
                         fontSize: 16,
