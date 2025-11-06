@@ -2,31 +2,63 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sample_project/layouts/bottom_nav_bar.dart';
 import 'package:sample_project/models/contact.dart';
-import 'package:sample_project/screens/add_contact.dart';
-import 'package:sample_project/screens/detail.dart';
-import 'package:sample_project/screens/home.dart';
-import 'package:sample_project/screens/modify_contact.dart';
-import 'package:sample_project/screens/profile.dart';
+import 'package:sample_project/screens/home/add_contact.dart';
+import 'package:sample_project/screens/home/detail.dart';
+import 'package:sample_project/screens/profile/edit_profile.dart';
+import 'package:sample_project/screens/home/home.dart';
+import 'package:sample_project/screens/auth/login_screen.dart';
+import 'package:sample_project/screens/home/modify_contact.dart';
+import 'package:sample_project/screens/profile/profile.dart';
+import 'package:sample_project/screens/auth/register_screen.dart';
+import 'package:sample_project/screens/setting.dart';
+import 'package:sample_project/screens/splash_screen.dart';
 
 class RouteNames {
-  static const String home = '/';
-  static const String add = '/add';
-  static const String profile = '/profile';
-  static const String contact = '/contact/:index';
-  static const String modify = '/modify/:index';
+  static const String splash = 'splash';
+  static const String home = 'home';
+  static const String add = 'add';
+  static const String profile = 'profile';
+  static const String editProfile = 'profile/edit';
+  static const String contact = 'contact';
+  static const String editContact = 'contact/edit';
+  static const String setting = 'setting';
+  static const String login = 'login';
+  static const String register = 'register';
 }
 
 class RoutePaths {
+  static const String splash = '/splash';
   static const String home = '/';
   static const String add = '/add';
   static const String profile = '/profile';
+  static const String editProfile = '/profile/edit';
   static const String contact = '/contact/:index';
-  static const String modify = '/modify/:index';
+  static const String editContact = '/contact/:index/edit';
+  static const String setting = '/setting';
+  static const String login = '/login';
+  static const String register = '/register';
 }
 
 final GoRouter router = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/splash',
   routes: [
+    GoRoute(
+      path: RoutePaths.splash,
+      name: RouteNames.splash,
+      builder: (context, state) {
+        return const SplashScreen();
+      },
+    ),
+    GoRoute(
+      path: RoutePaths.login,
+      name: RouteNames.login,
+      builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.register,
+      name: RouteNames.register,
+      builder: (context, state) => const RegisterScreen(),
+    ),
     ShellRoute(
       builder: (context, state, child) =>
           Scaffold(body: child, bottomNavigationBar: const BottomNavBar()),
@@ -55,12 +87,24 @@ final GoRouter router = GoRouter(
           ),
         ),
         GoRoute(
-          path: RoutePaths.modify,
-          name: RouteNames.modify,
+          path: RoutePaths.editContact,
+          name: RouteNames.editContact,
           builder: (context, state) => ModifyContactScreen(
             contact: state.extra as Contact,
             index: int.parse(state.pathParameters['index']!),
           ),
+        ),
+        GoRoute(
+          path: RoutePaths.editProfile,
+          name: RouteNames.editProfile,
+          builder: (context, state) {
+            return const EditProfileScreen();
+          },
+        ),
+        GoRoute(
+          path: RoutePaths.setting,
+          name: RouteNames.setting,
+          builder: (context, state) => const SettingScreen(),
         ),
       ],
     ),

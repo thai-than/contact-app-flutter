@@ -18,6 +18,9 @@ class ContactService implements ContactServiceInterface {
   }
 
   @override
+  Contact? getContactByIndex(int index) => _box.getAt(index);
+
+  @override
   Contact getMyContact() => Contact(
     firstName: 'John',
     lastName: 'Doe',
@@ -26,8 +29,7 @@ class ContactService implements ContactServiceInterface {
     phoneNumber: '123-456-7890',
     address: '123 Main St, Anytown, USA',
     company: 'Sample Company',
-    linkedIn: 'https://linkedin.com/in/johndoe',
-    facebook: 'https://facebook.com/johndoe',
+    website: 'https://samplecompany.com',
   );
 
   @override
@@ -56,7 +58,7 @@ class ContactService implements ContactServiceInterface {
         .where(
           (c) =>
               c.fullName.toLowerCase().contains(q) ||
-              c.email.toLowerCase().contains(q),
+              c.email!.toLowerCase().contains(q),
         )
         .toList();
   }

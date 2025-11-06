@@ -2,14 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sample_project/models/contact.dart';
+import 'package:sample_project/models/user.dart';
 import 'package:sample_project/router/router.dart';
-import 'package:sample_project/blocs/data_bloc.dart';
+import 'package:sample_project/blocs/contact_list/contact_list_cubit.dart';
+import 'package:sample_project/blocs/user/user_cubit.dart';
+import 'package:sample_project/utils/constant.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(ContactAdapter());
+  Hive.registerAdapter(UserAdapter());
+  Hive.registerAdapter(SettingAdapter());
+  // await Hive.deleteBoxFromDisk('settings');
+  // await Hive.deleteBoxFromDisk('contacts');
+  // await Hive.deleteBoxFromDisk('users');
   await Hive.openBox<Contact>('contacts');
+  await Hive.openBox<User>('users');
+  await Hive.openBox<Setting>('settings');
 
   runApp(const ContactManagerApp());
 }
@@ -22,15 +32,28 @@ class ContactManagerApp extends StatefulWidget {
 }
 
 class _ContactManagerAppState extends State<ContactManagerApp> {
+  late final ContactListCubit _contactListCubit;
+  late final UserCubit _userCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _contactListCubit = ContactListCubit();
+    _userCubit = UserCubit();
+    _userCubit.loadUser();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => DataBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: _contactListCubit),
+        BlocProvider.value(value: _userCubit),
+      ],
       child: MaterialApp.router(
         routerConfig: router,
-        title: 'Contact Manager',
         theme: ThemeData(
-          scaffoldBackgroundColor: Colors.white,
+          scaffoldBackgroundColor: kWhiteColor,
           useMaterial3: true,
         ),
         debugShowCheckedModeBanner: false,

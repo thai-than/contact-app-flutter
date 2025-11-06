@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:sample_project/blocs/data_bloc.dart';
-import 'package:sample_project/blocs/data_event.dart';
-import 'package:sample_project/blocs/data_state.dart';
+import 'package:sample_project/blocs/contact_list/contact_list_cubit.dart';
+import 'package:sample_project/blocs/contact_list/contact_list_event.dart';
+import 'package:sample_project/blocs/contact_list/contact_list_state.dart';
 import 'package:sample_project/models/contact.dart';
-import 'package:sample_project/router/router.dart';
+import 'package:sample_project/utils/constant.dart';
 import 'package:sample_project/widgets/contact_detail.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -36,20 +35,24 @@ class DetailScreen extends StatelessWidget {
     );
 
     if (shouldDelete == true) {
-      context.read<DataBloc>().add(DeleteContact(index));
+      context.read<ContactListCubit>().add(DeleteContact(index));
     }
+  }
+
+  Future<void> _onGoToEditContact(BuildContext context) async {
+    context.read<ContactListCubit>().add(GoToEditContact(contact, contact.key));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<DataBloc, DataState>(
-      listenWhen: (previous, current) => current is DataLoaded,
+    return BlocListener<ContactListCubit, ContactListState>(
+      listenWhen: (previous, current) => current is ContactListDeleted,
       listener: (context, state) {
-        if (state is DataLoaded && !state.data.contains(contact)) {
+        if (state is ContactListDeleted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: const Text('Contact deleted successfully'),
-              backgroundColor: Colors.red.shade600,
+              backgroundColor: kSuccessColor,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -57,7 +60,6 @@ class DetailScreen extends StatelessWidget {
               duration: const Duration(seconds: 2),
             ),
           );
-          context.goNamed(RouteNames.home);
         }
       },
       child: Scaffold(
@@ -73,11 +75,7 @@ class DetailScreen extends StatelessWidget {
             IconButton(
               tooltip: 'Edit contact',
               icon: const Icon(Icons.edit, color: Colors.black87),
-              onPressed: () => context.goNamed(
-                RouteNames.modify,
-                pathParameters: {'index': index.toString()},
-                extra: contact,
-              ),
+              onPressed: () => _onGoToEditContact(context),
             ),
             IconButton(
               tooltip: 'Delete contact',

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sample_project/router/router.dart';
+import 'package:sample_project/utils/constant.dart';
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({super.key});
@@ -10,13 +11,14 @@ class BottomNavBar extends StatelessWidget {
     final String location = GoRouterState.of(context).uri.toString();
     int currentIndex;
     switch (location) {
-      case '/add':
+      case RoutePaths.profile:
+      case RoutePaths.editProfile:
         currentIndex = 0;
         break;
-      case '/':
+      case RoutePaths.home:
         currentIndex = 1;
         break;
-      case '/profile':
+      case RoutePaths.setting:
         currentIndex = 2;
         break;
       default:
@@ -26,13 +28,13 @@ class BottomNavBar extends StatelessWidget {
     void onTabTapped(int index) {
       switch (index) {
         case 0:
-          context.goNamed(RouteNames.add);
+          context.goNamed(RouteNames.profile);
           break;
         case 1:
           context.goNamed(RouteNames.home);
           break;
         case 2:
-          context.goNamed(RouteNames.profile);
+          context.goNamed(RouteNames.setting);
           break;
       }
     }
@@ -40,14 +42,13 @@ class BottomNavBar extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: onTabTapped,
-      selectedItemColor: Colors.green,
+      selectedItemColor: kPrimaryColor,
+      unselectedItemColor: kTextLightColor,
+      backgroundColor: kBgColor,
       items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person_add_alt_1),
-          label: 'Add',
-        ),
-        BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'Contacts'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'Contacts'),
+        BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
       ],
     );
   }
