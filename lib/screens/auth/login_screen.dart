@@ -79,6 +79,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   const SizedBox(height: 20),
+
+                  if (state is UserError)
+                    Text(state.message, style: TextStyle(color: Colors.red)),
+                  const SizedBox(height: 20),
+
                   SizedBox(
                     width: double.infinity,
                     height: 48,

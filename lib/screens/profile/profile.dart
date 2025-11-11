@@ -6,9 +6,7 @@ import 'package:sample_project/utils/constant.dart';
 import 'package:sample_project/widgets/contact_detail.dart';
 
 class ProfileScreen extends StatelessWidget {
-  final String? email;
-
-  const ProfileScreen({super.key, this.email});
+  const ProfileScreen({super.key});
 
   // _onEditProfilePressed
   void _onEditProfilePressed(BuildContext context) {

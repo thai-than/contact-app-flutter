@@ -15,10 +15,30 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
     context.read<ContactListCubit>().add(LoadContacts());
+  }
+
+  void _onSearch(String value) {
+    context.read<ContactListCubit>().add(SearchContact(value));
+  }
+
+  void _onRefresh() {
+    context.read<ContactListCubit>().add(RefreshContacts());
+  }
+
+  void _onAddContactButtonTapped() {
+    context.read<ContactListCubit>().onAddContactButtonTapped();
   }
 
   @override
@@ -29,23 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: false,
-          title: const Text(
-            'Contact',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-          ),
           // add search input to app bar
           actions: [
-            SearchInput(
-              controller: TextEditingController(),
-              onChanged: (value) {
-                context.read<ContactListCubit>().add(SearchContact(value));
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: () =>
-                  context.read<ContactListCubit>().add(RefreshContacts()),
-            ),
+            SearchInput(controller: _searchController, onChanged: _onSearch),
+            IconButton(icon: const Icon(Icons.refresh), onPressed: _onRefresh),
           ],
         ),
         Expanded(
@@ -79,8 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: FloatingActionButton(
-            onPressed: () =>
-                context.read<ContactListCubit>().onAddContactButtonTapped(),
+            onPressed: _onAddContactButtonTapped,
             tooltip: 'Add contact',
             backgroundColor: kPrimaryColor,
             elevation: 2,

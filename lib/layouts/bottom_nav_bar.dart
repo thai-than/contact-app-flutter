@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sample_project/blocs/user/user_cubit.dart';
+import 'package:sample_project/blocs/user/user_state.dart';
 import 'package:sample_project/router/router.dart';
 import 'package:sample_project/utils/constant.dart';
 
@@ -39,17 +42,29 @@ class BottomNavBar extends StatelessWidget {
       }
     }
 
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: onTabTapped,
-      selectedItemColor: kPrimaryColor,
-      unselectedItemColor: kTextLightColor,
-      backgroundColor: kBgColor,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'Contacts'),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
-      ],
+    return BlocBuilder<UserCubit, UserState>(
+      builder: (context, state) {
+        return BottomNavigationBar(
+          currentIndex: currentIndex,
+          onTap: onTabTapped,
+          selectedItemColor: kPrimaryColor,
+          unselectedItemColor: kTextLightColor,
+          backgroundColor: context.read<UserCubit>().getUserAppearanceMode()
+              ? kDarkColor
+              : kBgColor,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.list_alt),
+              label: 'Contacts',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
+          ],
+        );
+      },
     );
   }
 }

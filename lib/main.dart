@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:sample_project/blocs/contact_list/contact_list_cubit.dart';
 import 'package:sample_project/models/contact.dart';
 import 'package:sample_project/models/user.dart';
 import 'package:sample_project/router/router.dart';
-import 'package:sample_project/blocs/contact_list/contact_list_cubit.dart';
 import 'package:sample_project/blocs/user/user_cubit.dart';
 import 'package:sample_project/blocs/user/user_state.dart';
 import 'package:sample_project/utils/constant.dart';
@@ -53,7 +53,9 @@ class _ContactManagerAppState extends State<ContactManagerApp> {
       ],
       child: BlocBuilder<UserCubit, UserState>(
         builder: (context, userState) {
-          final isDarkMode = userState is UserLoaded && userState.user.setting?.isDarkMode == true;
+          final isDarkMode =
+              userState is UserLoaded &&
+              userState.user.setting?.isDarkMode == true;
           return MaterialApp.router(
             routerConfig: router,
             theme: ThemeData(
@@ -62,9 +64,7 @@ class _ContactManagerAppState extends State<ContactManagerApp> {
               useMaterial3: true,
             ),
             debugShowCheckedModeBanner: false,
-            darkTheme: ThemeData.dark(
-              useMaterial3: true,
-            ).copyWith(
+            darkTheme: ThemeData.dark(useMaterial3: true).copyWith(
               colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryColor),
               scaffoldBackgroundColor: kDarkColor,
             ),

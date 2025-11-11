@@ -64,7 +64,7 @@ class UserCubit extends Cubit<UserState> {
       final user = _userService.getUser();
       if (user != null && user.passcode == passcode) {
         emit(UserLoaded(user));
-        _router.go(RoutePaths.home);
+        _router.goNamed(RouteNames.home);
       } else {
         emit(UserError('Invalid passcode'));
       }
@@ -89,7 +89,14 @@ class UserCubit extends Cubit<UserState> {
     try {
       final user = _userService.getUser();
       if (user != null) {
-        final currentSetting = user.setting ?? Setting(isDarkMode: false, language: 'en', fontSize: 'Medium', enableBiometric: false);
+        final currentSetting =
+            user.setting ??
+            Setting(
+              isDarkMode: false,
+              language: 'en',
+              fontSize: 'Medium',
+              enableBiometric: false,
+            );
         final updatedSetting = Setting(
           isDarkMode: !currentSetting.isDarkMode,
           language: currentSetting.language,
@@ -107,5 +114,13 @@ class UserCubit extends Cubit<UserState> {
     } catch (e) {
       emit(UserError(e.toString()));
     }
+  }
+
+  bool getUserAppearanceMode() {
+    final user = _userService.getUser();
+    if (user != null) {
+      return user.setting?.isDarkMode ?? false;
+    }
+    return false;
   }
 }

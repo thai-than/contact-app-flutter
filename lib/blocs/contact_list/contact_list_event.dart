@@ -11,17 +11,6 @@ class AddContact extends ContactListEvent {
   AddContact(this.contact);
 }
 
-class DeleteContact extends ContactListEvent {
-  final int index;
-  DeleteContact(this.index);
-}
-
-class UpdateContact extends ContactListEvent {
-  final Contact contact;
-  final int index;
-  UpdateContact(this.contact, this.index);
-}
-
 class SearchContact extends ContactListEvent {
   final String query;
   SearchContact(this.query);
@@ -30,11 +19,6 @@ class SearchContact extends ContactListEvent {
 class GetContactById extends ContactListEvent {
   final int id;
   GetContactById(this.id);
-}
-
-class GetContactByEmail extends ContactListEvent {
-  final String email;
-  GetContactByEmail(this.email);
 }
 
 class GoToContactDetails extends ContactListEvent {

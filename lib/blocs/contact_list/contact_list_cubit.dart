@@ -16,10 +16,7 @@ class ContactListCubit extends Bloc<ContactListEvent, ContactListState> {
     on<LoadContacts>(_onLoadData);
     on<RefreshContacts>(_onRefreshData);
     on<AddContact>(_onAddContact);
-    on<DeleteContact>(_onDeleteContact);
-    on<UpdateContact>(_onUpdateContact);
     on<SearchContact>(_onSearchContact);
-    on<GetContactByEmail>(_onGetContactByEmail);
     on<GoToContactDetails>(_onGoToContactDetails);
     on<GoToEditContact>(_onGoToEditContact);
   }
@@ -30,9 +27,7 @@ class ContactListCubit extends Bloc<ContactListEvent, ContactListState> {
   ) async {
     emit(ContactListLoading());
     try {
-      await Future.delayed(
-        const Duration(milliseconds: 300),
-      ); // optional UX delay
+      await Future.delayed(const Duration(milliseconds: 300));
       final data = _contactService.getContacts();
       emit(ContactListLoaded(data));
     } catch (e) {
@@ -60,49 +55,13 @@ class ContactListCubit extends Bloc<ContactListEvent, ContactListState> {
   ) async {
     emit(ContactListLoading());
     try {
+      await Future.delayed(const Duration(milliseconds: 300));
       await _contactService.addContact(event.contact);
       final data = _contactService.getContacts();
       emit(ContactListLoaded(data));
       _router.goNamed(RouteNames.home);
     } catch (e) {
       emit(ContactListError('Failed to add contact: $e'));
-    }
-  }
-
-  Future<void> _onDeleteContact(
-    DeleteContact event,
-    Emitter<ContactListState> emit,
-  ) async {
-    emit(ContactListLoading());
-    try {
-      await _contactService.deleteContact(event.index);
-      final data = _contactService.getContacts();
-      emit(ContactListLoaded(data));
-      _router.goNamed(RouteNames.home);
-    } catch (e) {
-      emit(ContactListError('Failed to delete contact: $e'));
-    }
-  }
-
-  Future<void> _onUpdateContact(
-    UpdateContact event,
-    Emitter<ContactListState> emit,
-  ) async {
-    emit(ContactListLoading());
-    try {
-      await _contactService.updateContact(
-        index: event.index,
-        contact: event.contact,
-      );
-      final updatedContacts = _contactService.getContacts();
-      emit(ContactListLoaded(updatedContacts));
-      _router.goNamed(
-        RouteNames.contact,
-        pathParameters: {'index': event.index.toString()},
-        extra: event.contact,
-      );
-    } catch (e) {
-      emit(ContactListError('Failed to update contact: $e'));
     }
   }
 
@@ -113,22 +72,9 @@ class ContactListCubit extends Bloc<ContactListEvent, ContactListState> {
     emit(ContactListLoading());
     try {
       final results = _contactService.searchContacts(event.query);
-      emit(ContactListLoaded(results));
+      emit(ContactListLoaded(results, query: event.query));
     } catch (e) {
       emit(ContactListError('Failed to search contacts: $e'));
-    }
-  }
-
-  Future<void> _onGetContactByEmail(
-    GetContactByEmail event,
-    Emitter<ContactListState> emit,
-  ) async {
-    emit(ContactListLoading());
-    try {
-      final contact = _contactService.getContactByEmail(event.email);
-      emit(ContactListLoaded([contact!]));
-    } catch (e) {
-      emit(ContactListError('Failed to get contact by email: $e'));
     }
   }
 

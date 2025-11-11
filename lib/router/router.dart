@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sample_project/blocs/contact_detail/contact_detail_cubit.dart';
+import 'package:sample_project/blocs/contact_list/contact_list_cubit.dart';
+import 'package:sample_project/blocs/contact_list/contact_list_event.dart';
 import 'package:sample_project/layouts/bottom_nav_bar.dart';
-import 'package:sample_project/models/contact.dart';
 import 'package:sample_project/screens/home/add_contact.dart';
 import 'package:sample_project/screens/home/detail.dart';
 import 'package:sample_project/screens/profile/edit_profile.dart';
@@ -81,18 +84,24 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: RoutePaths.contact,
           name: RouteNames.contact,
-          builder: (context, state) => DetailScreen(
-            contact: state.extra as Contact,
-            index: int.parse(state.pathParameters['index']!),
-          ),
+          builder: (context, state) {
+            final index = int.parse(state.pathParameters['index']!);
+            return BlocProvider(
+              create: (context) => ContactDetailCubit(index: index),
+              child: const DetailScreen(),
+            );
+          },
         ),
         GoRoute(
           path: RoutePaths.editContact,
           name: RouteNames.editContact,
-          builder: (context, state) => ModifyContactScreen(
-            contact: state.extra as Contact,
-            index: int.parse(state.pathParameters['index']!),
-          ),
+          builder: (context, state) {
+            final index = int.parse(state.pathParameters['index']!);
+            return BlocProvider(
+              create: (context) => ContactDetailCubit(index: index),
+              child: const ModifyContactScreen(),
+            );
+          },
         ),
         GoRoute(
           path: RoutePaths.editProfile,

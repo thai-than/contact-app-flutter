@@ -14,11 +14,12 @@ class ContactListLoading extends ContactListState {}
 
 class ContactListLoaded extends ContactListState {
   final List<Contact> data;
+  final String? query;
 
-  const ContactListLoaded(this.data);
+  const ContactListLoaded(this.data, {this.query});
 
   @override
-  List<Object?> get props => [data];
+  List<Object?> get props => [data, query];
 }
 
 class ContactListError extends ContactListState {
