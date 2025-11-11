@@ -12,7 +12,7 @@ class ContactDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -36,7 +36,6 @@ class ContactDetailScreen extends StatelessWidget {
                 Text(
                   contact.fullName,
                   style: const TextStyle(
-                    color: kTextColor,
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                   ),
@@ -44,7 +43,6 @@ class ContactDetailScreen extends StatelessWidget {
                 Text(
                   contact.phoneNumber,
                   style: const TextStyle(
-                    color: kTextDarkColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
@@ -82,16 +80,12 @@ class ContactDetailScreen extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon, color: kTextDarkColor, size: 18),
+        Icon(icon, size: 18),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
-              color: kTextDarkColor,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-            ),
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
         ),
       ],

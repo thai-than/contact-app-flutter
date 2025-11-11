@@ -9,3 +9,4 @@ const kTextLightColor = Color(0xFF747474);
 const kTextDarkColor = Color(0xFF333333);
 const kErrorColor = Color(0xFFEB5757);
 const kWhiteColor = Colors.white;
+const kDarkColor = Color.fromARGB(255, 0, 10, 39);

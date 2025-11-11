@@ -84,4 +84,28 @@ class UserCubit extends Cubit<UserState> {
       emit(UserError(e.toString()));
     }
   }
+
+  Future<void> toggleDarkMode() async {
+    try {
+      final user = _userService.getUser();
+      if (user != null) {
+        final currentSetting = user.setting ?? Setting(isDarkMode: false, language: 'en', fontSize: 'Medium', enableBiometric: false);
+        final updatedSetting = Setting(
+          isDarkMode: !currentSetting.isDarkMode,
+          language: currentSetting.language,
+          fontSize: currentSetting.fontSize,
+          enableBiometric: currentSetting.enableBiometric,
+        );
+        final updatedUser = User(
+          contact: user.contact,
+          passcode: user.passcode,
+          setting: updatedSetting,
+        );
+        await _userService.updateUser(updatedUser);
+        emit(UserLoaded(updatedUser));
+      }
+    } catch (e) {
+      emit(UserError(e.toString()));
+    }
+  }
 }

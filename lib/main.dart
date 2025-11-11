@@ -6,6 +6,7 @@ import 'package:sample_project/models/user.dart';
 import 'package:sample_project/router/router.dart';
 import 'package:sample_project/blocs/contact_list/contact_list_cubit.dart';
 import 'package:sample_project/blocs/user/user_cubit.dart';
+import 'package:sample_project/blocs/user/user_state.dart';
 import 'package:sample_project/utils/constant.dart';
 
 void main() async {
@@ -50,13 +51,26 @@ class _ContactManagerAppState extends State<ContactManagerApp> {
         BlocProvider.value(value: _contactListCubit),
         BlocProvider.value(value: _userCubit),
       ],
-      child: MaterialApp.router(
-        routerConfig: router,
-        theme: ThemeData(
-          scaffoldBackgroundColor: kWhiteColor,
-          useMaterial3: true,
-        ),
-        debugShowCheckedModeBanner: false,
+      child: BlocBuilder<UserCubit, UserState>(
+        builder: (context, userState) {
+          final isDarkMode = userState is UserLoaded && userState.user.setting?.isDarkMode == true;
+          return MaterialApp.router(
+            routerConfig: router,
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryColor),
+              scaffoldBackgroundColor: kWhiteColor,
+              useMaterial3: true,
+            ),
+            debugShowCheckedModeBanner: false,
+            darkTheme: ThemeData.dark(
+              useMaterial3: true,
+            ).copyWith(
+              colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryColor),
+              scaffoldBackgroundColor: kDarkColor,
+            ),
+            themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          );
+        },
       ),
     );
   }
